@@ -169,11 +169,6 @@ class Converter
             static::$words[$i] ??= require sprintf(self::WORDS_PATH, $i);
             $string = strtr($string, static::$words[$i]);
         }
-        
-        for ($i = 0; $i < $segmentsCount; $i++) {
-            static::$words[$i] ??= require sprintf($wordsPath, $i);
-            $string = strtr($string, static::$words[$i]);
-        }
 
         return $this->split($beforeSplit ? $beforeSplit($string) : $string);
     }
