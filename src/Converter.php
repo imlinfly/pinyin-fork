@@ -34,6 +34,8 @@ class Converter
         // 符号: !"#$%&'()*+,-./:;<=>?@[\]^_{|}~`
         'punctuation' => '\p{P}',
     ];
+    
+    protected static array $words = [];
 
     public function __construct()
     {
@@ -164,7 +166,13 @@ class Converter
         }
 
         for ($i = 0; $i < self::SEGMENTS_COUNT; $i++) {
-            $string = strtr($string, require sprintf(self::WORDS_PATH, $i));
+            static::$words[$i] ??= require sprintf(self::WORDS_PATH, $i);
+            $string = strtr($string, static::$words[$i]);
+        }
+        
+        for ($i = 0; $i < $segmentsCount; $i++) {
+            static::$words[$i] ??= require sprintf($wordsPath, $i);
+            $string = strtr($string, static::$words[$i]);
         }
 
         return $this->split($beforeSplit ? $beforeSplit($string) : $string);
